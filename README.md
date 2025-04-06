@@ -39,7 +39,7 @@ pytest -s test_bolted_lap_joint.py
 
 ## 🛠️ How It Works?
 **Embed Video of Project Demo**: You can watch the demo video to see how the it functions in action.
-![Project Demo](https://github.com/diyapratheep/BoltedLapJointAlgorithm/blob/main/task2final.mp4)
+![Project Demo](https://github.com/diyapratheep/BoltedLapJointAlgorithm/blob/main/gif.gif)
 
 
 
