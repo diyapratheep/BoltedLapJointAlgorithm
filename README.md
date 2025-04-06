@@ -39,7 +39,7 @@ pytest -s test_bolted_lap_joint.py
 
 ## 🛠️ How It Works?
 **Embed Video of Project Demo**: You can watch the demo video to see how the it functions in action.
-![Project Demo](https://github.com/diyapratheep/Neoma/blob/main/demo%20gif/demo%20video.gif)
+![Project Demo](https://github.com/diyapratheep/BoltedLapJointAlgorithm/blob/main/task2final.mp4)
 
 
 
