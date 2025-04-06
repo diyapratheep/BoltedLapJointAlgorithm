@@ -1,6 +1,5 @@
-# 🔩 Bolted Lap Joint Design as per IS 800:2007
-
-This project automatically designs a **bolted lap joint** that connects two plates subjected to a known tensile force. The design complies with **IS 800:2007** steel structure standards and includes strength checks, spacing validations, and optimization to minimize the number of bolts while ensuring safety.
+# BoltedLapJointAlgorithm
+The goal of this project is to design a bolted lap joint that connects two plates of specific thicknesses and width, subjected to a known tensile force. 
 
 ## 🚀 Features
 
