@@ -24,7 +24,7 @@ This project automatically designs a **bolted lap joint** that connects two plat
 ├── test_bolted_lap_joint.py         # Automated test cases (PyTest)
 ├── is800.py                         # IS800:2007 formula implementations
 ├── README.md                        # This file
-
+```
 
 ## 🛠️ Requirements
 
@@ -36,7 +36,7 @@ This project automatically designs a **bolted lap joint** that connects two plat
 ## 🛠️ Testing Commands
 ```bash
 pytest -s test_bolted_lap_joint.py
-
+```
 ## 🛠️ How It Works?
 **Embed Video of Project Demo**: You can watch the demo video to see how the it functions in action.
 ![Project Demo](https://github.com/diyapratheep/BoltedLapJointAlgorithm/blob/main/gif.gif)
