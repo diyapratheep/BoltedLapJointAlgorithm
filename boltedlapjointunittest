@@ -1,5 +1,7 @@
+import math
 import pytest
 from bolted_lap_joint_design import Bolt, Plate, ConnectionDesign
+from is800_2007 import IS800_2007
 
 def test_bolt_creation():
     bolt = Bolt(diameter=12, grade=4.6)
@@ -50,3 +52,107 @@ def test_design_efficiency():
 # Run the tests
 if __name__ == "__main__":
     pytest.main()
+
+
+
+
+
+
+
+    @staticmethod
+    def cl_10_3_3_bolt_shear_capacity(f_ub, A_nb, A_sb, n_n, n_s=0, safety_factor_parameter=None):
+        """Calculate design shear strength of bearing bolt
+        Args:
+            f_ub - Ultimate tensile strength of the bolt in MPa (float)
+            A_nb - Net shear area of the bolt at threads in sq. mm  (float)
+            A_sb - Nominal plain shank area of the bolt in sq. mm  (float)
+            n_n - Number of shear planes with threads intercepting the shear plane (int)
+            n_s -  Number of shear planes without threads intercepting the shear plane (int)
+            safety_factor_parameter - Either 'field' or 'shop' (str)
+        return:
+            V_dsb - Design shear strength of bearing bolt in N (float)
+        Note:
+            Reference:
+            IS 800:2007,  cl 10.3.3
+        """
+        V_nsb = f_ub / math.sqrt(3) * (n_n * A_nb + n_s * A_sb)
+        gamma_mb = IS800_2007.cl_5_4_1_Table_5['gamma_mb'][KEY_DP_FAB_SHOP]
+        V_dsb = V_nsb / gamma_mb
+        return V_dsb
+    
+       @staticmethod
+    def cl_10_3_4_bolt_bearing_capacity(f_u, f_ub, t, d, e, p, bolt_hole_type='Standard',
+                                        safety_factor_parameter=KEY_DP_FAB_FIELD):
+
+        """Calculate design bearing strength of a bolt on any plate.
+        Args:
+            f_u     - Ultimate tensile strength of the plate in MPa (float)
+            f_ub    - Ultimate tensile strength of the bolt in MPa (float)
+            t       - Summation of thicknesses of the connected plates in mm as defined in cl. 10.3.4 (float)
+            d       - Diameter of the bolt in mm (float)
+            e       - End distance of the fastener along bearing direction in mm (float)
+            p       - Pitch distance of the fastener along bearing direction in mm (float)
+            bolt_hole_type - Either 'Standard' or 'Over-sized' or 'short_slot' or 'long_slot' (str)
+            safety_factor_parameter - Either 'Field' or 'Shop' (str)
+        return:
+            V_dpb - Design bearing strength of bearing bolt in N (float)
+        Note:
+            Reference:
+            IS 800:2007,  cl 10.3.4
+        """
+        d_0 = IS800_2007.cl_10_2_1_bolt_hole_size(d, bolt_hole_type)
+
+        if p > 0.0:
+            k_b = min(e / (3.0 * d_0), p / (3.0 * d_0) - 0.25, f_ub / f_u, 1.0)
+        else:
+            k_b = min(e / (3.0 * d_0), f_ub / f_u, 1.0)  # calculate k_b when there is no pitch (p = 0)
+
+        k_b = round(k_b, 2)
+        V_npb = 2.5 * k_b * d * t * f_u
+        gamma_mb = IS800_2007.cl_5_4_1_Table_5['gamma_mb'][safety_factor_parameter]
+        V_dpb = V_npb / gamma_mb
+
+        if bolt_hole_type == 'Over-sized' or bolt_hole_type == 'short_slot':
+            V_dpb *= 0.7
+        elif bolt_hole_type == 'long_slot':
+            V_dpb *= 0.5
+
+        return V_dpb
+     @staticmethod
+    def cl_10_2_1_bolt_hole_size(d, bolt_hole_type='Standard'):
+        """Calculate bolt hole diameter as per Table 19 of IS 800:2007
+        Args:
+             d - Nominal diameter of fastener in mm (float)
+             bolt_hole_type - Either 'Standard' or 'Over-sized' or 'short_slot' or 'long_slot' (str)
+        Returns:
+            bolt_hole_size -  Diameter of the bolt hole in mm (float)
+        Note:
+            Reference:
+            IS 800, Table 19 (Cl 10.2.1)
+        TODO:ADD KEY_DISP for for Standard/oversize etc and replace these strings
+        """
+        table_19 = {
+            "12-14": {'Standard': 1.0, 'Over-sized': 3.0, 'short_slot': 4.0, 'long_slot': 2.5},
+            "16-22": {'Standard': 2.0, 'Over-sized': 4.0, 'short_slot': 6.0, 'long_slot': 2.5},
+            "24": {'Standard': 2.0, 'Over-sized': 6.0, 'short_slot': 8.0, 'long_slot': 2.5},
+            "24+": {'Standard': 3.0, 'Over-sized': 8.0, 'short_slot': 10.0, 'long_slot': 2.5}
+        }
+        import re
+        # d = str(re.sub("[^0-9]", "", str(d)))
+        d = int(d)
+
+        if d < 12:
+            clearance = 0
+        elif d <= 14:
+            clearance = table_19["12-14"][bolt_hole_type]
+        elif d <= 22:
+            clearance = table_19["16-22"][bolt_hole_type]
+        elif d <= 24:
+            clearance = table_19["24"][bolt_hole_type]
+        else:
+            clearance = table_19["24+"][bolt_hole_type]
+        if bolt_hole_type == 'long_slot':
+            bolt_hole_size = (clearance + 1) * d
+        else:
+            bolt_hole_size = clearance + d
+        return bolt_hole_size
