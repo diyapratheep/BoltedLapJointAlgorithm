@@ -1,13 +1,12 @@
+
 import pytest
 import math
-import bolted_lap_joint_design as bld  # This is your main code module
+import bolted_lap_joint_design as bld  
 
-# 🔧 Mock IS800_2007 object with required methods
 
 
 from bolted_lap_joint_design import design_lap_joint
 
-# 🔢 Global counters (shared between test runs)
 success_count = 0
 failure_count = 0
 skipped_count = 0
@@ -22,7 +21,6 @@ class TestBoltedLapJoint:
     def test_minimum_two_bolts(self, P, t1, t2):
         w = 150  # Assumed plate width
 
-        # Access global counters
         global success_count, failure_count, skipped_count
 
         print(f"\n[🔧] Testing with P={P} kN, t1={t1} mm, t2={t2} mm ...")
@@ -48,7 +46,7 @@ class TestBoltedLapJoint:
 
                
 
-        # ✅ Print summary only once at the end of the last combination
+        # Print summary at the end 
         if P == 100 and t1 == 24 and t2 == 24:
             total = success_count + failure_count + skipped_count
             print("\n📊 === TEST SUMMARY ===")
@@ -69,26 +67,7 @@ class TestBoltedLapJoint:
             print(f"[🟡] SKIPPED: Zero load test passed as expected — {e}")
 
 
-    # def test_min_thickness(self):
-    #     try:
-    #         result = bld.design_lap_joint(50, 150, 6, 6)
-    #         if result["number_of_bolts"] >= 2:
-    #             print("[✅] Min thickness test passed.")
-    #         else:
-    #             print("[❌] FAIL: Less than 2 bolts in min thickness test.")
-    #     except Exception as e:
-    #         print(f"[❌] ERROR: Min thickness test failed — {e}")
 
-
-    # def test_max_thickness(self):
-    #     try:
-    #         result = bld.design_lap_joint(100, 150, 24, 24)
-    #         if result["number_of_bolts"] >= 2:
-    #             print("[✅] Max thickness test passed.")
-    #         else:
-    #             print("[❌] FAIL: Less than 2 bolts in max thickness test.")
-    #     except Exception as e:
-    #         print(f"[❌] ERROR: Max thickness test failed — {e}"
     def test_min_thickness(self):
         result = bld.design_lap_joint(50, 150, 6, 6)
         assert result["number_of_bolts"] >= 2, "[❌] FAIL: Less than 2 bolts in min thickness test."

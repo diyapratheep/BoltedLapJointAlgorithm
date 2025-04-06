@@ -1,4 +1,6 @@
-# IS800_2007.py
+# IS800_2007.py all functions derived from provided 1s800_2007.py file
+#     #  returns the ultimate and yield strength of the bolt based on its grade.
+#     # For simplicity, I used some common values.
 
 import math
 
